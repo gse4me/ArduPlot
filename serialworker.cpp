@@ -112,7 +112,12 @@ void SerialWorker::ProcessDataLine(char* line)
         if (target >= 10 && target <= 18) {
             //qDebug()<<"Target: "<<target<<" Value: "<<value;
         }
-        emit ForwardReceivedDataDouble(target, value, curTime);
+        if (value < -255 || value > 255) {
+            qDebug() << "Discarding Target: " << target << " Value: " << value << " Meaning: " << QString::number(value);
+            qDebug() << "Was received as: " << line << endl;
+        } else {
+            emit ForwardReceivedDataDouble(target, value, curTime);
+        }
 
     } else {
         qDebug() << "Received" << line;

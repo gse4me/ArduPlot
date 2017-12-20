@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget* parent)
     QTimer* dataTimer = new QTimer(this);
     connect(dataTimer, SIGNAL(timeout()), this, SLOT(RealTimeDataSlot()));
     dataTimer->start(0); // Interval 0 means to refresh as fast as possible
+
+    ui->doubleSpinBoxSecondsToPlot->setValue(SecondsToPlot);
 }
 
 MainWindow::~MainWindow()
@@ -190,7 +192,6 @@ void MainWindow::ConfigurePidPlot(QCustomPlot* plot)
 
     plot->xAxis->setTicker(timeTicker);
     plot->axisRect()->setupFullAxesBox();
-    plot->yAxis->setRange(-5, 5);
 
     // make left and bottom axes transfer their ranges to right and top axes:
     connect(plot->xAxis, SIGNAL(rangeChanged(QCPRange)), plot->xAxis2, SLOT(setRange(QCPRange)));
@@ -281,6 +282,15 @@ void MainWindow::UpdatePidValues()
     BlockSignals(false);
 }
 
+QVector<double> NormalizeVect(QVector<double> values, double range)
+{
+    QVector<double> retVct;
+    for (auto val : values) {
+        retVct.push_back(val / range);
+    }
+    return retVct;
+}
+
 void MainWindow::RealTimeDataSlot()
 {
     static QTime time(QTime::currentTime());
@@ -296,21 +306,35 @@ void MainWindow::RealTimeDataSlot()
     {
         // add data to lines:
         QMutexLocker locker(&mutexRecData);
-        ui->customPlotPid1->graph(0)->addData(receivedDataTimestamps[ARD_PID1_INPUT], receivedData[ARD_PID1_INPUT], true);
-        ui->customPlotPid1->graph(1)->addData(receivedDataTimestamps[ARD_PID1_OUTPUT], receivedData[ARD_PID1_OUTPUT], true);
-        ui->customPlotPid1->graph(2)->addData(receivedDataTimestamps[ARD_PID1_SETPOINT], receivedData[ARD_PID1_SETPOINT], true);
+        if (scaleData) {
+            ui->customPlotPid1->graph(0)->addData(receivedDataTimestamps[ARD_PID1_INPUT], NormalizeVect(receivedData[ARD_PID1_INPUT], SCALE_PID1_INPUT), true);
+            ui->customPlotPid1->graph(1)->addData(receivedDataTimestamps[ARD_PID1_OUTPUT], NormalizeVect(receivedData[ARD_PID1_OUTPUT], SCALE_PID1_OUTPUT), true);
+            ui->customPlotPid1->graph(2)->addData(receivedDataTimestamps[ARD_PID1_SETPOINT], NormalizeVect(receivedData[ARD_PID1_SETPOINT], SCALE_PID1_SETPOINT), true);
 
-        ui->customPlotPid2->graph(0)->addData(receivedDataTimestamps[ARD_PID2_INPUT], receivedData[ARD_PID2_INPUT], true);
-        ui->customPlotPid2->graph(1)->addData(receivedDataTimestamps[ARD_PID2_OUTPUT], receivedData[ARD_PID2_OUTPUT], true);
-        ui->customPlotPid2->graph(2)->addData(receivedDataTimestamps[ARD_PID2_SETPOINT], receivedData[ARD_PID2_SETPOINT], true);
+            ui->customPlotPid2->graph(0)->addData(receivedDataTimestamps[ARD_PID2_INPUT], NormalizeVect(receivedData[ARD_PID2_INPUT], SCALE_PID2_INPUT), true);
+            ui->customPlotPid2->graph(1)->addData(receivedDataTimestamps[ARD_PID2_OUTPUT], NormalizeVect(receivedData[ARD_PID2_OUTPUT], SCALE_PID2_OUTPUT), true);
+            ui->customPlotPid2->graph(2)->addData(receivedDataTimestamps[ARD_PID2_SETPOINT], NormalizeVect(receivedData[ARD_PID2_SETPOINT], SCALE_PID2_SETPOINT), true);
 
-        ui->customPlotPid3->graph(0)->addData(receivedDataTimestamps[ARD_PID3_INPUT], receivedData[ARD_PID3_INPUT], true);
-        ui->customPlotPid3->graph(1)->addData(receivedDataTimestamps[ARD_PID3_OUTPUT], receivedData[ARD_PID3_OUTPUT], true);
-        ui->customPlotPid3->graph(2)->addData(receivedDataTimestamps[ARD_PID3_SETPOINT], receivedData[ARD_PID3_SETPOINT], true);
+            ui->customPlotPid3->graph(0)->addData(receivedDataTimestamps[ARD_PID3_INPUT], NormalizeVect(receivedData[ARD_PID3_INPUT], SCALE_PID3_INPUT), true);
+            ui->customPlotPid3->graph(1)->addData(receivedDataTimestamps[ARD_PID3_OUTPUT], NormalizeVect(receivedData[ARD_PID3_OUTPUT], SCALE_PID3_OUTPUT), true);
+            ui->customPlotPid3->graph(2)->addData(receivedDataTimestamps[ARD_PID3_SETPOINT], NormalizeVect(receivedData[ARD_PID3_SETPOINT], SCALE_PID3_SETPOINT), true);
+        } else {
+            ui->customPlotPid1->graph(0)->addData(receivedDataTimestamps[ARD_PID1_INPUT], receivedData[ARD_PID1_INPUT], true);
+            ui->customPlotPid1->graph(1)->addData(receivedDataTimestamps[ARD_PID1_OUTPUT], receivedData[ARD_PID1_OUTPUT], true);
+            ui->customPlotPid1->graph(2)->addData(receivedDataTimestamps[ARD_PID1_SETPOINT], receivedData[ARD_PID1_SETPOINT], true);
 
-        ui->customPlotPid1->yAxis->rescale();
-        ui->customPlotPid2->yAxis->rescale();
-        ui->customPlotPid3->yAxis->rescale();
+            ui->customPlotPid2->graph(0)->addData(receivedDataTimestamps[ARD_PID2_INPUT], receivedData[ARD_PID2_INPUT], true);
+            ui->customPlotPid2->graph(1)->addData(receivedDataTimestamps[ARD_PID2_OUTPUT], receivedData[ARD_PID2_OUTPUT], true);
+            ui->customPlotPid2->graph(2)->addData(receivedDataTimestamps[ARD_PID2_SETPOINT], receivedData[ARD_PID2_SETPOINT], true);
+
+            ui->customPlotPid3->graph(0)->addData(receivedDataTimestamps[ARD_PID3_INPUT], receivedData[ARD_PID3_INPUT], true);
+            ui->customPlotPid3->graph(1)->addData(receivedDataTimestamps[ARD_PID3_OUTPUT], receivedData[ARD_PID3_OUTPUT], true);
+            ui->customPlotPid3->graph(2)->addData(receivedDataTimestamps[ARD_PID3_SETPOINT], receivedData[ARD_PID3_SETPOINT], true);
+
+            ui->customPlotPid1->yAxis->rescale();
+            ui->customPlotPid2->yAxis->rescale();
+            ui->customPlotPid3->yAxis->rescale();
+        }
 
         UpdatePidValues();
         receivedData.clear();
@@ -320,11 +344,11 @@ void MainWindow::RealTimeDataSlot()
     }
 
     // make key axis range scroll with the data (at a constant range size of 8):
-    ui->customPlotPid1->xAxis->setRange(curTime, 32, Qt::AlignRight);
+    ui->customPlotPid1->xAxis->setRange(curTime, SecondsToPlot, Qt::AlignRight);
     ui->customPlotPid1->replot();
-    ui->customPlotPid2->xAxis->setRange(curTime, 32, Qt::AlignRight);
+    ui->customPlotPid2->xAxis->setRange(curTime, SecondsToPlot, Qt::AlignRight);
     ui->customPlotPid2->replot();
-    ui->customPlotPid3->xAxis->setRange(curTime, 32, Qt::AlignRight);
+    ui->customPlotPid3->xAxis->setRange(curTime, SecondsToPlot, Qt::AlignRight);
     ui->customPlotPid3->replot();
 
     // calculate frames per second:
@@ -473,4 +497,22 @@ void MainWindow::on_doubleSpinBoxP3Kd_valueChanged(const QString& arg1)
 void MainWindow::on_doubleSpinBoxP3Setpoint_valueChanged(const QString& arg1)
 {
     SendCommand(CUTE_PID3_SETP, arg1);
+}
+
+void MainWindow::on_checkboxScaleGraphData_stateChanged(int arg1)
+{
+    if (arg1 == Qt::Checked) {
+        scaleData = true;
+        ui->customPlotPid1->yAxis->setRange(-1.2, 1.2);
+        ui->customPlotPid2->yAxis->setRange(-1.2, 1.2);
+        ui->customPlotPid3->yAxis->setRange(-1.2, 1.2);
+
+    } else {
+        scaleData = false;
+    }
+}
+
+void MainWindow::on_doubleSpinBoxSecondsToPlot_valueChanged(double arg1)
+{
+    SecondsToPlot = arg1;
 }

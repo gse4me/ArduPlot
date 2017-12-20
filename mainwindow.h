@@ -26,6 +26,9 @@ signals:
 
 private:
     bool Connected = false;
+    bool scaleData = false;
+    double SecondsToPlot = 8;
+
     QMutex mutexRecData;
     Ui::MainWindow* ui;
     SerialWorker* serialWorker;
@@ -74,6 +77,8 @@ private slots:
     void on_doubleSpinBoxP3Ki_valueChanged(const QString& arg1);
     void on_doubleSpinBoxP3Kd_valueChanged(const QString& arg1);
     void on_doubleSpinBoxP3Setpoint_valueChanged(const QString& arg1);
+    void on_checkboxScaleGraphData_stateChanged(int arg1);
+    void on_doubleSpinBoxSecondsToPlot_valueChanged(double arg1);
 };
 
 #endif // MAINWINDOW_H

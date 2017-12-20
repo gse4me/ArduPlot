@@ -64,4 +64,17 @@
 #define CUTE_GIRO_TO_MOT_OFF 27
 #define CUTE_GET_ALL_PID_CFGS 28
 
+//------------------------- SCALING -----------------------//
+#define SCALE_PID1_INPUT 40
+#define SCALE_PID1_OUTPUT 255
+#define SCALE_PID1_SETPOINT 40
+
+#define SCALE_PID2_INPUT 40
+#define SCALE_PID2_OUTPUT 255
+#define SCALE_PID2_SETPOINT 40
+
+#define SCALE_PID3_INPUT 120
+#define SCALE_PID3_OUTPUT 40
+#define SCALE_PID3_SETPOINT 120
+
 #endif // CONFIG_H
