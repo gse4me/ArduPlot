@@ -45,6 +45,7 @@ private:
     void SendCommand(uint8_t cmd, QString val);
     void SendCommand(uint8_t cmd);
     void BlockSignals(bool enable);
+    void clearPidGraphData(QCustomPlot* plot);
 
 private slots:
 
@@ -79,6 +80,7 @@ private slots:
     void on_doubleSpinBoxP3Setpoint_valueChanged(const QString& arg1);
     void on_checkboxScaleGraphData_stateChanged(int arg1);
     void on_doubleSpinBoxSecondsToPlot_valueChanged(double arg1);
+    void on_pushButtonSavePidConfigs_clicked();
 };
 
 #endif // MAINWINDOW_H

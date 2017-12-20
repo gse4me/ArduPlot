@@ -393,7 +393,7 @@
     <item row="0" column="2">
      <layout class="QGridLayout" name="gridLayout_4">
       <property name="verticalSpacing">
-       <number>60</number>
+       <number>30</number>
       </property>
       <item row="0" column="0">
        <layout class="QGridLayout" name="gridLayout">
@@ -418,6 +418,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
+          </property>
          </widget>
         </item>
         <item row="1" column="0">
@@ -441,6 +444,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
+          </property>
          </widget>
         </item>
         <item row="2" column="0">
@@ -463,6 +469,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
           </property>
          </widget>
         </item>
@@ -545,6 +554,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimum">
+           <double>-99.000000000000000</double>
+          </property>
          </widget>
         </item>
        </layout>
@@ -572,6 +584,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
+          </property>
          </widget>
         </item>
         <item row="1" column="0">
@@ -595,6 +610,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
+          </property>
          </widget>
         </item>
         <item row="2" column="0">
@@ -617,6 +635,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
           </property>
          </widget>
         </item>
@@ -687,6 +708,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimum">
+           <double>-99.000000000000000</double>
+          </property>
          </widget>
         </item>
        </layout>
@@ -714,6 +738,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
+          </property>
          </widget>
         </item>
         <item row="1" column="0">
@@ -737,6 +764,9 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
+          </property>
          </widget>
         </item>
         <item row="2" column="0">
@@ -759,6 +789,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="maximum">
+           <double>999.990000000000009</double>
           </property>
          </widget>
         </item>
@@ -828,6 +861,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimum">
+           <double>-99.000000000000000</double>
           </property>
          </widget>
         </item>

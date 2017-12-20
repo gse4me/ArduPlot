@@ -64,6 +64,8 @@
 #define CUTE_GIRO_TO_MOT_OFF 27
 #define CUTE_GET_ALL_PID_CFGS 28
 
+#define CUTE_SAVE_TO_EEPROM 30
+
 //------------------------- SCALING -----------------------//
 #define SCALE_PID1_INPUT 40
 #define SCALE_PID1_OUTPUT 255

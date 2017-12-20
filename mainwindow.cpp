@@ -331,9 +331,9 @@ void MainWindow::RealTimeDataSlot()
             ui->customPlotPid3->graph(1)->addData(receivedDataTimestamps[ARD_PID3_OUTPUT], receivedData[ARD_PID3_OUTPUT], true);
             ui->customPlotPid3->graph(2)->addData(receivedDataTimestamps[ARD_PID3_SETPOINT], receivedData[ARD_PID3_SETPOINT], true);
 
-            ui->customPlotPid1->yAxis->rescale();
-            ui->customPlotPid2->yAxis->rescale();
-            ui->customPlotPid3->yAxis->rescale();
+            ui->customPlotPid1->yAxis->rescale(true);
+            ui->customPlotPid2->yAxis->rescale(true);
+            ui->customPlotPid3->yAxis->rescale(true);
         }
 
         UpdatePidValues();
@@ -499,10 +499,18 @@ void MainWindow::on_doubleSpinBoxP3Setpoint_valueChanged(const QString& arg1)
     SendCommand(CUTE_PID3_SETP, arg1);
 }
 
+void MainWindow::clearPidGraphData(QCustomPlot* plot)
+{
+    for (int g = 0; g < plot->graphCount(); g++) {
+        plot->graph(g)->data()->clear();
+    }
+}
+
 void MainWindow::on_checkboxScaleGraphData_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked) {
         scaleData = true;
+
         ui->customPlotPid1->yAxis->setRange(-1.2, 1.2);
         ui->customPlotPid2->yAxis->setRange(-1.2, 1.2);
         ui->customPlotPid3->yAxis->setRange(-1.2, 1.2);
@@ -510,9 +518,18 @@ void MainWindow::on_checkboxScaleGraphData_stateChanged(int arg1)
     } else {
         scaleData = false;
     }
+
+    //clearPidGraphData(ui->customPlotPid1);
+    // clearPidGraphData(ui->customPlotPid2);
+    // clearPidGraphData(ui->customPlotPid3);
 }
 
 void MainWindow::on_doubleSpinBoxSecondsToPlot_valueChanged(double arg1)
 {
     SecondsToPlot = arg1;
+}
+
+void MainWindow::on_pushButtonSavePidConfigs_clicked()
+{
+    SendCommand(CUTE_SAVE_TO_EEPROM);
 }
