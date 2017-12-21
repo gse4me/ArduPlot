@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_5">
-    <item row="0" column="0" rowspan="2">
+    <item row="0" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -279,6 +279,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QCheckBox" name="checkBoxCycleStats">
+          <property name="text">
+           <string>CycleStatPrints</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QCheckBox" name="checkBoxGiroToMot">
           <property name="text">
            <string>GiroToMot</string>
@@ -287,6 +297,42 @@
            <bool>true</bool>
           </property>
          </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Normal Cyc Time:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelNormalCycTime">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Serial Cyc Time:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelSerialCycTime">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -307,6 +353,13 @@
        </spacer>
       </item>
       <item>
+       <widget class="QPushButton" name="pushButtonGetPidCfgs_2">
+        <property name="text">
+         <string>GetUp!</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButtonGetPidCfgs">
         <property name="text">
          <string>GetPidConfigs</string>
@@ -319,7 +372,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>SavePidConfigs(EEPROM)</string>
+         <string>SaveConfigs(EEPROM)</string>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -390,7 +443,7 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="2" rowspan="2">
+    <item row="0" column="2">
      <layout class="QGridLayout" name="gridLayout_4">
       <property name="verticalSpacing">
        <number>30</number>
@@ -741,6 +794,9 @@
           <property name="maximum">
            <double>999.990000000000009</double>
           </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
+          </property>
          </widget>
         </item>
         <item row="1" column="0">
@@ -767,6 +823,9 @@
           <property name="maximum">
            <double>999.990000000000009</double>
           </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
+          </property>
          </widget>
         </item>
         <item row="2" column="0">
@@ -792,6 +851,9 @@
           </property>
           <property name="maximum">
            <double>999.990000000000009</double>
+          </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
           </property>
          </widget>
         </item>
@@ -864,6 +926,9 @@
           </property>
           <property name="minimum">
            <double>-99.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.100000000000000</double>
           </property>
          </widget>
         </item>

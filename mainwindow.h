@@ -41,7 +41,7 @@ private:
     void CreateSerialWorker(); //Create the serialWorker thread
     void ConfigureConnectionControls(); // Populate the controls
     void EnableControls(bool enable); // Enable/disable controls
-    void UpdatePidValues();
+    void UpdateComponentValues();
     void SendCommand(uint8_t cmd, QString val);
     void SendCommand(uint8_t cmd);
     void BlockSignals(bool enable);
@@ -85,6 +85,8 @@ private slots:
 
     void mousePress(QMouseEvent* ev);
     void mouseWheel(QWheelEvent* ev);
+    void on_pushButtonGetPidCfgs_2_clicked();
+    void on_checkBoxCycleStats_stateChanged(int arg1);
 };
 
 #endif // MAINWINDOW_H

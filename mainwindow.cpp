@@ -281,7 +281,7 @@ void MainWindow::BlockSignals(bool enable)
     ui->doubleSpinBoxP3Setpoint->blockSignals(enable);
 }
 
-void MainWindow::UpdatePidValues()
+void MainWindow::UpdateComponentValues()
 {
 
     BlockSignals(true);
@@ -344,6 +344,15 @@ void MainWindow::UpdatePidValues()
     if (!receivedData[ARD_PID3_KD].isEmpty()) {
         ui->doubleSpinBoxP3Kd->setValue(receivedData[ARD_PID3_KD].last());
     }
+
+    //RunTimes
+    if (!receivedData[ARD_NORMAL_LOOP_TIME].isEmpty()) {
+        ui->labelNormalCycTime->setText(QString::number(receivedData[ARD_NORMAL_LOOP_TIME].last()));
+    }
+    if (!receivedData[ARD_SERIAL_LOOP_TIME].isEmpty()) {
+        ui->labelSerialCycTime->setText(QString::number(receivedData[ARD_SERIAL_LOOP_TIME].last()));
+    }
+
     BlockSignals(false);
 }
 
@@ -401,7 +410,7 @@ void MainWindow::RealTimeDataSlot()
             //     ui->customPlotPid3->yAxis->rescale(true);
         }
 
-        UpdatePidValues();
+        UpdateComponentValues();
         receivedData.clear();
         receivedDataTimestamps.clear();
 
@@ -594,4 +603,14 @@ void MainWindow::on_doubleSpinBoxSecondsToPlot_valueChanged(double arg1)
 void MainWindow::on_pushButtonSavePidConfigs_clicked()
 {
     SendCommand(CUTE_SAVE_TO_EEPROM);
+}
+
+void MainWindow::on_pushButtonGetPidCfgs_2_clicked()
+{
+    SendCommand(CUTE_GET_UP);
+}
+
+void MainWindow::on_checkBoxCycleStats_stateChanged(int arg1)
+{
+    arg1 == Qt::Checked ? SendCommand(CUTE_CYCLE_TIME_PRINTS_ON) : SendCommand(CUTE_CYCLE_TIME_PRINTS_OFF);
 }

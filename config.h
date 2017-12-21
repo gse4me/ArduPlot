@@ -35,6 +35,9 @@
 #define ARD_PID3_KI 18
 #define ARD_PID3_KD 19
 
+#define ARD_NORMAL_LOOP_TIME 20
+#define ARD_SERIAL_LOOP_TIME 21
+
 //------------------------- TRANSMIT COMMANDS ---------------//
 #define CUTE_PID1_KP 1
 #define CUTE_PID1_KI 2
@@ -65,6 +68,10 @@
 #define CUTE_GET_ALL_PID_CFGS 28
 
 #define CUTE_SAVE_TO_EEPROM 30
+#define CUTE_GET_UP 31
+
+#define CUTE_CYCLE_TIME_PRINTS_ON 32
+#define CUTE_CYCLE_TIME_PRINTS_OFF 33
 
 //------------------------- SCALING -----------------------//
 #define SCALE_PID1_INPUT 40
