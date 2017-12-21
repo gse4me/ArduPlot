@@ -27,7 +27,7 @@ signals:
 private:
     bool Connected = false;
     bool scaleData = false;
-    double SecondsToPlot = 8;
+    double SecondsToPlot = 20;
 
     QMutex mutexRecData;
     Ui::MainWindow* ui;

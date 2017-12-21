@@ -105,7 +105,7 @@ void SerialWorker::ProcessDataLine(char* line)
     static QTime time(QTime::currentTime());
     double curTime = time.elapsed() / 1000.0; // time elapsed since start, in seconds
 
-    int target = line[0];
+    uint8_t target = line[0];
 
     if (target != ARD_LOG) {
         double value = std::atof(line + 1);
@@ -120,7 +120,7 @@ void SerialWorker::ProcessDataLine(char* line)
         }
 
     } else {
-        qDebug() << "Received" << line;
+        qDebug() << "Received" << line + 1;
     }
 }
 
