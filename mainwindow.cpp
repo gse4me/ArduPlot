@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget* parent)
     ConfigurePidPlot(ui->customPlotPid2);
     ConfigurePidPlot(ui->customPlotPid3);
 
+    SetPidDefaultRanges(false);
+
     // setup a timer that repeatedly calls MainWindow::realtimeDataSlot:
     QTimer* dataTimer = new QTimer(this);
     connect(dataTimer, SIGNAL(timeout()), this, SLOT(RealTimeDataSlot()));
@@ -35,6 +37,28 @@ MainWindow::~MainWindow()
     serialWorkerThread.terminate();
     serialWorkerThread.wait();
     delete ui;
+}
+
+void MainWindow::SetPidDefaultRanges(bool normalized)
+{
+    if (normalized) {
+        ui->customPlotPid1->yAxis->setRange(-1.2, 1.2);
+        ui->customPlotPid2->yAxis->setRange(-1.2, 1.2);
+        ui->customPlotPid3->yAxis->setRange(-1.2, 1.2);
+    } else {
+        //Configure default ranges
+        QVector<double> a = { SCALE_PID1_INPUT, SCALE_PID1_OUTPUT, SCALE_PID1_SETPOINT };
+        double maxP1 = *(std::max_element(a.begin(), a.end()));
+        ui->customPlotPid1->yAxis->setRange(-(maxP1 + maxP1 * 0.1), (maxP1 + maxP1 * 0.1));
+
+        QVector<double> b = { SCALE_PID2_INPUT, SCALE_PID2_OUTPUT, SCALE_PID2_SETPOINT };
+        double maxP2 = *(std::max_element(b.begin(), b.end()));
+        ui->customPlotPid2->yAxis->setRange(-(maxP2 + maxP2 * 0.1), (maxP2 + maxP2 * 0.1));
+
+        QVector<double> c = { SCALE_PID3_INPUT, SCALE_PID3_OUTPUT, SCALE_PID3_SETPOINT };
+        double maxP3 = *(std::max_element(c.begin(), c.end()));
+        ui->customPlotPid3->yAxis->setRange(-(maxP3 + maxP3 * 0.1), (maxP3 + maxP3 * 0.1));
+    }
 }
 
 //--------------------------- Ui and buttons ------------------------------------------------------//
@@ -175,6 +199,8 @@ void MainWindow::ConfigurePidPlot(QCustomPlot* plot)
     plot->legend->setFont(font);
 #endif
 
+    plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+
     plot->addGraph(); // red line
     plot->graph(0)->setPen(QPen(Qt::red));
     plot->graph(0)->setName("Input");
@@ -196,6 +222,45 @@ void MainWindow::ConfigurePidPlot(QCustomPlot* plot)
     // make left and bottom axes transfer their ranges to right and top axes:
     connect(plot->xAxis, SIGNAL(rangeChanged(QCPRange)), plot->xAxis2, SLOT(setRange(QCPRange)));
     connect(plot->yAxis, SIGNAL(rangeChanged(QCPRange)), plot->yAxis2, SLOT(setRange(QCPRange)));
+
+    // connect slots that takes care that when an axis is selected, only that direction can be dragged and zoomed:
+    // connect(plot, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(mousePress(QMouseEvent*)));
+    connect(plot, SIGNAL(mouseWheel(QWheelEvent*)), this, SLOT(mouseWheel(QWheelEvent*)));
+}
+
+void MainWindow::mousePress(QMouseEvent* ev)
+{
+    // if an axis is selected, only allow the direction of that axis to be dragged
+    // if no axis is selected, both directions may be dragged
+    /*
+    if (ui->customPlotPid1->xAxis->selectedParts().testFlag(QCPAxis::spAxis))
+        ui->customPlotPid1->axisRect()->setRangeDrag(ui->customPlotPid1->xAxis->orientation());
+    else if (ui->customPlotPid1->yAxis->selectedParts().testFlag(QCPAxis::spAxis))
+        ui->customPlotPid1->axisRect()->setRangeDrag(ui->customPlotPid1->yAxis->orientation());
+    else
+        ui->customPlotPid1->axisRect()->setRangeDrag(Qt::Horizontal | Qt::Vertical);
+        */
+}
+
+void MainWindow::mouseWheel(QWheelEvent* ev)
+{
+
+    qDebug() << "delta: " << ev->delta();
+    if (ev->delta() > 0) {
+        ui->doubleSpinBoxSecondsToPlot->setValue(ui->doubleSpinBoxSecondsToPlot->value() - 1);
+    } else {
+        ui->doubleSpinBoxSecondsToPlot->setValue(ui->doubleSpinBoxSecondsToPlot->value() + 1);
+    }
+    // if an axis is selected, only allow the direction of that axis to be zoomed
+    // if no axis is selected, both directions may be zoomed
+    /*
+    if (ui->customPlotPid1->xAxis->selectedParts().testFlag(QCPAxis::spAxis))
+        ui->customPlotPid1->axisRect()->setRangeZoom(ui->customPlotPid1->xAxis->orientation());
+    else if (ui->customPlotPid1->yAxis->selectedParts().testFlag(QCPAxis::spAxis))
+        ui->customPlotPid1->axisRect()->setRangeZoom(ui->customPlotPid1->yAxis->orientation());
+    else
+        ui->customPlotPid1->axisRect()->setRangeZoom(Qt::Horizontal | Qt::Vertical);
+        */
 }
 
 void MainWindow::BlockSignals(bool enable)
@@ -331,9 +396,9 @@ void MainWindow::RealTimeDataSlot()
             ui->customPlotPid3->graph(1)->addData(receivedDataTimestamps[ARD_PID3_OUTPUT], receivedData[ARD_PID3_OUTPUT], true);
             ui->customPlotPid3->graph(2)->addData(receivedDataTimestamps[ARD_PID3_SETPOINT], receivedData[ARD_PID3_SETPOINT], true);
 
-            ui->customPlotPid1->yAxis->rescale(true);
-            ui->customPlotPid2->yAxis->rescale(true);
-            ui->customPlotPid3->yAxis->rescale(true);
+            //     ui->customPlotPid1->yAxis->rescale(true);
+            //    ui->customPlotPid2->yAxis->rescale(true);
+            //     ui->customPlotPid3->yAxis->rescale(true);
         }
 
         UpdatePidValues();
@@ -510,13 +575,10 @@ void MainWindow::on_checkboxScaleGraphData_stateChanged(int arg1)
 {
     if (arg1 == Qt::Checked) {
         scaleData = true;
-
-        ui->customPlotPid1->yAxis->setRange(-1.2, 1.2);
-        ui->customPlotPid2->yAxis->setRange(-1.2, 1.2);
-        ui->customPlotPid3->yAxis->setRange(-1.2, 1.2);
-
+        SetPidDefaultRanges(true);
     } else {
         scaleData = false;
+        SetPidDefaultRanges(false);
     }
 
     //clearPidGraphData(ui->customPlotPid1);

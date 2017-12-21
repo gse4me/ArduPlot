@@ -46,6 +46,7 @@ private:
     void SendCommand(uint8_t cmd);
     void BlockSignals(bool enable);
     void clearPidGraphData(QCustomPlot* plot);
+    void SetPidDefaultRanges(bool normalized);
 
 private slots:
 
@@ -81,6 +82,9 @@ private slots:
     void on_checkboxScaleGraphData_stateChanged(int arg1);
     void on_doubleSpinBoxSecondsToPlot_valueChanged(double arg1);
     void on_pushButtonSavePidConfigs_clicked();
+
+    void mousePress(QMouseEvent* ev);
+    void mouseWheel(QWheelEvent* ev);
 };
 
 #endif // MAINWINDOW_H
