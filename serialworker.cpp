@@ -99,6 +99,44 @@ void SerialWorker::PortReadData()
     }
 }
 
+void LogRemote(char* line)
+{
+    uint8_t target = line[0];
+
+    if (target == REMOTE_LOG) {
+        qDebug() << "LOG: " << line + 1;
+    } else if (target == REMOTE_CONTROL_BYTE) {
+        unsigned char byte = line[1];
+
+        int btnC = (byte & 1) > 0;
+        int btnZ = (byte & 2) > 0;
+        int xLeft = (byte & 4) > 0;
+        int xRight = (byte & 8) > 0;
+        int yUp = (byte & 16) > 0;
+        int yDn = (byte & 32) > 0;
+
+        qDebug() << "BtnC: " << btnC << " BtnZ: " << btnZ << " Left: " << xLeft << " Right: " << xRight << " Up: " << yUp << " Dn: " << yDn;
+
+    } else {
+        static int x = 0;
+        static int y = 0;
+        static int btn_c = 0;
+        static int btn_z = 0;
+        double value = (unsigned char)line[1];
+        //qDebug() << "Remote data Target: " << target << "Value: " << value << " Full line:" << line;
+        if (target == REMOTE_X_DATA)
+            x = value;
+        if (target == REMOTE_Y_DATA)
+            y = value;
+        if (target == REMOTE_C_BTN)
+            btn_c = value;
+        if (target == REMOTE_Z_BTN)
+            btn_z = value;
+
+        qDebug() << "Remote X:" << x << " Remote y:" << y << " BtnC: " << btn_c << " BtnZ: " << btn_z;
+    }
+}
+
 void SerialWorker::ProcessDataLine(char* line)
 {
     //Time in case we need to timestamp the received data
@@ -107,12 +145,16 @@ void SerialWorker::ProcessDataLine(char* line)
 
     uint8_t target = line[0];
 
+    //qDebug() << "Target: " << target << " Received: " << line;
+
     if (target != ARD_LOG) {
         double value = std::atof(line + 1);
-        if (target >= 10 && target <= 18) {
-            //qDebug()<<"Target: "<<target<<" Value: "<<value;
+
+        if (target >= 100 && target <= 120) { // from the remote; just print end return
+            LogRemote(line);
+            return;
         }
-        if (value < -255 || value > 255) {
+        if (value < -255 || value > 255) { // is this a glitch?
             qDebug() << "Discarding Target: " << target << " Value: " << value << " Meaning: " << QString::number(value);
             qDebug() << "Was received as: " << line << endl;
         } else {

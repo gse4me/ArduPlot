@@ -38,6 +38,14 @@
 #define ARD_NORMAL_LOOP_TIME 20
 #define ARD_SERIAL_LOOP_TIME 21
 
+//------------------------ FROM REMOTE ----------------------//
+#define REMOTE_X_DATA 100
+#define REMOTE_Y_DATA 101
+#define REMOTE_C_BTN 102
+#define REMOTE_Z_BTN 103
+#define REMOTE_CONTROL_BYTE 104
+#define REMOTE_LOG 115
+
 //------------------------- TRANSMIT COMMANDS ---------------//
 #define CUTE_PID1_KP 1
 #define CUTE_PID1_KI 2
